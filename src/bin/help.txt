@@ -1,0 +1,40 @@
+mkpasswd - generate passwords
+
+usage:
+mkpasswd
+mkpasswd [... OPTIONS ...] [LENGTH]
+
+If LENGTH is not set, the password has a length of 32 characters.
+
+options:
+    -n, --count COUNT   generates COUNT passwords, separated by \n
+    -a, --alphabet SET  sets a custom alphabet of characters to use
+    [predefined set]    use a predefined alphabet
+                        can not be used with one of the -a or --alphabet
+predefined alphabet:
+    --password              a-z, A-Z, 0-9, each of =+-*/,;:.!?&|^<>(){}_%@#
+    --latin-numbers         a-z, A-Z, 0-9
+    --base64                a-z, A-Z, 0-9, +, /
+    --base64-url            a-z, A-Z, 0-9, -, _
+    --numbers               0-9
+    --latin                 a-z, A-Z
+    --latin-lower           a-z
+    --latin-lower-numbers   a-z, 0-9
+    --latin-upper           A-Z
+    --latin-upper-numbers   A-Z, 0-9
+
+examples:
+
+`mkpasswd` - Generates a 32-character long password.
+
+`mkpasswd 16` - Generates a 16-character long password.
+
+`mkpasswd -a "QWERTYqwerty"` - The password only consists of the characters "QWERTYqwerty"
+
+`mkpasswd --latin-numbers` - Generates a password made of latin lower and upper case letters and numbers.
+
+`mkpasswd -n 10` - Generates 10 passwords.
+
+`mkpasswd -n 3 -a "abcdefghijklmnopqrstuvwxyz" 5`
+Generates 3 passwords with a length of 5 characters, only consisting of the lowercase latin alphabet.
+Passing `--latin-lower` has the same effect.
