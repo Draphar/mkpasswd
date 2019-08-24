@@ -25,7 +25,5 @@ use crate::{alphabets::Password, generate};
 ///
 /// [`Password`]: sets/constant.Password.html
 pub fn mkpasswd() -> String {
-    unsafe {
-        String::from_utf8_unchecked(generate(&Password, 32).unwrap())
-    }
+    unsafe { String::from_utf8_unchecked(generate(&Password, 32).unwrap()) }
 }

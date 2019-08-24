@@ -8,7 +8,7 @@ use rand_os::OsRng;
 
 use std::borrow::Cow;
 use std::env;
-use std::io::{self, Write, Error, ErrorKind};
+use std::io::{self, Error, ErrorKind, Write};
 use std::process;
 
 fn main() {
@@ -19,7 +19,12 @@ fn main() {
 
     if count == 1 {
         generate(&alphabet, length)
-            .map_err(|e| Error::new(ErrorKind::Other, format!("failed to generate password: {}", e)))
+            .map_err(|e| {
+                Error::new(
+                    ErrorKind::Other,
+                    format!("failed to generate password: {}", e),
+                )
+            })
             .and_then(|password| io::stdout().write_all(&password))
             .unwrap_or_else(|e| {
                 eprintln!("error: {}", e);
