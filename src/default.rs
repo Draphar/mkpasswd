@@ -1,18 +1,4 @@
-use crate::{alphabets::Password, generate_with_rng};
-use rand_core::RngCore;
-use rand_os::OsRng;
-use std::sync::Mutex;
-
-lazy_static! {
-    static ref RNG: Mutex<OsRng> = {
-        let mut rng = OsRng::new().expect("Failed to create secure random number generator");
-        let mut buf = [0];
-        rng.try_fill_bytes(&mut buf)
-            .expect("Failed to read random numbers");
-
-        Mutex::new(rng)
-    };
-}
+use crate::{alphabets::Password, generate};
 
 /// Generates an UTF-8 valid password with a length of 32 characters.
 ///
@@ -40,8 +26,6 @@ lazy_static! {
 /// [`Password`]: sets/constant.Password.html
 pub fn mkpasswd() -> String {
     unsafe {
-        String::from_utf8_unchecked(
-            generate_with_rng(&Password, 32, &mut *RNG.lock().unwrap()).unwrap(),
-        )
+        String::from_utf8_unchecked(generate(&Password, 32).unwrap())
     }
 }

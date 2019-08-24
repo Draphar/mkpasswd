@@ -25,8 +25,6 @@ These functions take an alphabet, which is a set of characters that the password
 
 pub extern crate rand_core;
 pub extern crate rand_os;
-#[macro_use]
-extern crate lazy_static;
 
 pub mod alphabets;
 mod default;
@@ -38,8 +36,7 @@ use rand_os::OsRng;
 
 /// Generates a `length` long password made of bytes from `alphabet`.
 ///
-/// Since this function creates a new random number generator **each call**,
-/// one should consider creating a generator once and then use [`generate_with_rng`].
+/// This function uses the cryptographically secure [`OsRng`] internally.
 ///
 /// Also see [`generate_with_rng`] for more information.
 ///
@@ -61,14 +58,12 @@ use rand_os::OsRng;
 /// println!("Your password: {}", password);
 /// ```
 ///
+/// [`OsRng`]: https://docs.rs/rand_os/0.2.1/rand_os/struct.OsRng.html
 /// [`generate_with_rng`]: fn.generate_with_rng.html
 /// [error section of `generate_with_rng`]: fn.generate_with_rng.html#errors
+#[inline]
 pub fn generate(alphabet: &[u8], length: usize) -> Result<Vec<u8>, Error> {
-    let mut rng = OsRng::new()?;
-    let mut test = [0];
-    rng.try_fill_bytes(&mut test)?;
-
-    generate_with_rng(alphabet, length, &mut rng)
+    generate_with_rng(alphabet, length, &mut OsRng)
 }
 
 /// Generates a `length` long password made of bytes from `alphabet`
@@ -86,7 +81,7 @@ pub fn generate(alphabet: &[u8], length: usize) -> Result<Vec<u8>, Error> {
 /// use rand_os::OsRng;
 ///
 /// let alphabet = b"qwerty+asdfgh-zxcvbn";
-/// let mut rng = OsRng::new().unwrap();
+/// let mut rng = OsRng;
 /// let password = generate_with_rng(alphabet, 16, &mut rng).unwrap();
 ///
 /// assert_eq!(password.len(), 16);

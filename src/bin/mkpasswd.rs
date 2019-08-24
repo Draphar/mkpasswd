@@ -2,13 +2,13 @@ extern crate mkpasswd;
 extern crate rand_core;
 extern crate rand_os;
 
-use mkpasswd::{alphabets, generate, generate_with_rng};
+use mkpasswd::{alphabets, generate};
 use rand_core::RngCore;
 use rand_os::OsRng;
 
 use std::borrow::Cow;
 use std::env;
-use std::io::{self, Write};
+use std::io::{self, Write, Error, ErrorKind};
 use std::process;
 
 fn main() {
@@ -19,19 +19,15 @@ fn main() {
 
     if count == 1 {
         generate(&alphabet, length)
-            .map_err(|e| e.into())
+            .map_err(|e| Error::new(ErrorKind::Other, format!("failed to generate password: {}", e)))
             .and_then(|password| io::stdout().write_all(&password))
             .unwrap_or_else(|e| {
-                eprintln!("error: failed to generate password: {}", e);
+                eprintln!("error: {}", e);
                 process::exit(1)
             });
     } else {
-        let mut rng = OsRng::new().unwrap_or_else(|e| {
-            eprintln!("error: failed to create random number generator: {}", e);
-            process::exit(1)
-        });
         let mut test = [0];
-        rng.try_fill_bytes(&mut test).unwrap_or_else(|e| {
+        OsRng.try_fill_bytes(&mut test).unwrap_or_else(|e| {
             eprintln!("error: failed to create random number generator: {}", e);
             process::exit(1)
         });
@@ -39,7 +35,7 @@ fn main() {
         let _stdout = io::stdout();
         let mut stdout = _stdout.lock();
         for _ in 0..count {
-            match generate_with_rng(&alphabet, length, &mut rng) {
+            match generate(&alphabet, length) {
                 Ok(password) => {
                     stdout.write_all(&password).unwrap();
                     stdout.write(b"\n").unwrap();
