@@ -117,7 +117,7 @@ where
 
     while buf.len() < length {
         let bytes = rng.next_u64().to_ne_bytes();
-        for i in bytes.into_iter() {
+        for i in bytes.iter() {
             if alphabet.contains(i) {
                 buf.push(*i);
             };
