@@ -1,10 +1,8 @@
 extern crate mkpasswd;
 extern crate rand_core;
-extern crate rand_os;
 
 use mkpasswd::{alphabets, generate};
-use rand_core::RngCore;
-use rand_os::OsRng;
+use rand_core::{OsRng, RngCore};
 
 use std::borrow::Cow;
 use std::env;

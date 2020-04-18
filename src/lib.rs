@@ -24,15 +24,13 @@ These functions take an alphabet, which is a set of characters that the password
 */
 
 pub extern crate rand_core;
-pub extern crate rand_os;
 
 pub mod alphabets;
 mod default;
 
 pub use {alphabets::Password, default::mkpasswd};
 
-use rand_core::{CryptoRng, Error, RngCore};
-use rand_os::OsRng;
+use rand_core::{CryptoRng, Error, OsRng, RngCore};
 
 /// Generates a `length` long password made of bytes from `alphabet`.
 ///
@@ -78,7 +76,7 @@ pub fn generate(alphabet: &[u8], length: usize) -> Result<Vec<u8>, Error> {
 ///
 /// ```
 /// use mkpasswd::generate_with_rng;
-/// use rand_os::OsRng;
+/// use rand_core::OsRng;
 ///
 /// let alphabet = b"qwerty+asdfgh-zxcvbn";
 /// let mut rng = OsRng;
